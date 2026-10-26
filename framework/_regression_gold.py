@@ -75,8 +75,24 @@ check("tc.series_col_order", built, live)
 
 # COMMAND ----------
 
+# DBTITLE 1,WS_CBTA
+# A 6-dimension DSD the code had never seen when it was written. Its SDMX-CSV attribute
+# order comes out right because the order is derived from the attachment hierarchy.
+cbta = publish_gold("WS_CBTA", dry_run=True)
+check("cbta.rows_timeseries", cbta["rows_timeseries"], 96)
+check("cbta.rows_series", cbta["rows_series"], 8)
+check("cbta.structure_id", cbta["structure_id"], "BIS:WS_CBTA(1.0)")
+check("cbta.timeseries_diff", diff(cbta["timeseries"], "workspace.sdmx_gold.cbta_timeseries"), [0, 0])
+check("cbta.series_diff", diff(cbta["series"], "workspace.sdmx_gold.cbta_series"), [0, 0])
+built, live = cols(cbta["timeseries"], "workspace.sdmx_gold.cbta_timeseries")
+check("cbta.timeseries_col_order", built, live)
+built, live = cols(cbta["series"], "workspace.sdmx_gold.cbta_series")
+check("cbta.series_col_order", built, live)
+
+# COMMAND ----------
+
 # DBTITLE 1,SDMX-CSV views match the existing ones column for column
-for entity, built_result in (("cbpol", cbpol), ("tc", tc)):
+for entity, built_result in (("cbpol", cbpol), ("tc", tc), ("cbta", cbta)):
     select_sql = built_result["view_sql"].split(" AS\n", 1)[1]
     built = [c.upper() for c in spark.sql(select_sql).limit(0).columns]
     live = [c.upper() for c in spark.table(f"workspace.sdmx_gold.{entity}_sdmx_csv").columns]
@@ -86,7 +102,7 @@ for entity, built_result in (("cbpol", cbpol), ("tc", tc)):
 
 # DBTITLE 1,dq_overview
 ov = refresh_dq_overview(dry_run=True)
-check("dq_overview.rows", ov.count(), 2)
+check("dq_overview.rows", ov.count(), 3)
 check("dq_overview.diff", diff(ov, "workspace.sdmx_gold.dq_overview"), [0, 0])
 
 # COMMAND ----------

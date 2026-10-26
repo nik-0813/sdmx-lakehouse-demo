@@ -135,6 +135,10 @@ denotes an informational/full replace. Column order after the header is dimensio
 measure, then attributes in attachment order. The output was compared against the BIS API's
 own `sdmx-csv` for the same key: `WS_CBPOL` matched on all 360 rows and 5,400 values.
 
+That comparison was a **one-time manual check**, recorded in `notebooks/99_Decision_Log`
+with its methodology. Unlike the row counts and column orders, it is not re-run by the
+regression suites.
+
 ## BIS API specifics
 
 - **Structure resources are namespaced.** The standard top-level `/dataflow`,

@@ -36,6 +36,12 @@ Three dataflows with deliberately different shapes, through the same code:
 been seen, yet its SDMX-CSV attributes came out in the right order — because that order is
 derived from the SDMX attachment hierarchy, not from a per-dataset list.
 
+Every figure in the table above is re-derived by the regression suites, `WS_CBTA` included.
+
+<!-- Drop docs/images/dashboard.png in place, then uncomment:
+![Data quality dashboard](docs/images/dashboard.png)
+-->
+
 ## Architecture
 
 ```mermaid
@@ -87,8 +93,14 @@ run_flow                   per dataflow: flow_id, dry_run, fetch
 `run_flow` chains all five stages. `dry_run=true` computes and reports everything while
 writing nothing.
 
-Three regression suites run as Databricks jobs and assert the published figures:
-`_regression_v2_1` (12 checks), `_regression_gold` (17), `_regression_completeness` (5).
+Three regression suites run as Databricks jobs and assert the published figures against
+live data, every call with `dry_run=True`: `_regression_v2_1` (16 assertions),
+`_regression_gold` (26), `_regression_completeness` (5). All three cover **all three
+dataflows**, including `WS_CBTA`.
+
+<!-- Drop docs/images/regression_gold.png in place, then uncomment:
+![Gold regression suite, 17 of 17 passing](docs/images/regression_gold.png)
+-->
 
 Unit tests run without Spark:
 

@@ -71,20 +71,24 @@ proves very little; the first run of this fixture caught 4 of 6 and exposed two 
 a regex-only time check that accepted `2024-13`, and a `cast` that threw under Spark ANSI
 mode where `try_cast` returns null. Both fixed; now 6 of 6, with the controls still clean.
 
-**Regression suites — does it still reproduce known-good output?** Three suites, 34
+That is **six of the seven rules**. `STRUCT` is not seeded: it asserts that every DSD
+component has a corresponding column, which cannot be provoked by a bad row — only by a
+malformed table. It fires on every live run instead.
+
+**Regression suites — does it still reproduce known-good output?** Three suites, 47
 assertions, run as Databricks jobs against live data with `dry_run=True`:
 
 | Suite | Asserts |
 |---|---|
-| `_regression_v2_1` | row counts per flow, superseded counts, 6-of-6 seeded errors, 0 findings on controls, and that the rebuilt silver is row-for-row identical to the existing table |
-| `_regression_gold` | row counts, `STRUCTURE_ID`, row-level diff, **column order**, SDMX-CSV column list, `dq_overview` contents |
-| `_regression_completeness` | the exact gaps found, and that they match the original implementation's output |
+| `_regression_v2_1` (16) | row counts and superseded counts for all three flows, 6-of-7 rules caught on the seeded fixture, 0 findings on controls, and that the rebuilt silver is row-for-row identical to each existing table |
+| `_regression_gold` (26) | row counts, `STRUCTURE_ID`, row-level diff, **column order**, SDMX-CSV column list for all three flows, plus `dq_overview` contents |
+| `_regression_completeness` (5) | the exact gaps found, and that they match the original implementation's output |
 
 **One lesson worth recording.** The first gold suite passed while the column ordering was
 wrong, because its comparison helper did `spark.table(t).select(*df.columns)` — it
 reordered the expected result to match the candidate before comparing. A helper that
-normalises the property under test cannot test it. Explicit column-order assertions were
-added and the suite went from 13 checks to 17.
+normalises the property under test cannot test it. Explicit `*_col_order` assertions now
+exist for every gold object.
 
 ## Known issues
 

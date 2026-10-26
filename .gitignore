@@ -218,3 +218,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Databricks scratch notebooks. The default name contains colons, which are
+# illegal on Windows and make the repo impossible to clone there.
+**/New Notebook*
+
+# Local scratch: notebooks exported from the Databricks workspace for comparison
+_wsexport/
+_incoming/
+_recovery/
+
+# Private working notes, deliberately not published
+docs/RECOVERY_LOG.md

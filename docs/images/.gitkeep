@@ -1,0 +1,6 @@
+Screenshots referenced from the main README. Drop files here with these names:
+
+  dashboard.png            the AI/BI data quality dashboard
+  regression_gold.png      output of framework/_regression_gold showing 17 PASS lines
+
+Then uncomment the matching image tags in ../../README.md.

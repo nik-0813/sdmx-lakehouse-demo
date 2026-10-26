@@ -44,6 +44,16 @@ check("tc.superseded", tc["superseded"], 0)
 
 # COMMAND ----------
 
+# DBTITLE 1,WS_CBTA against live bronze
+# The onboarding proof: a 6-dimension DSD added after the framework was finished, with no
+# code written for it. Asserted here so the claim is reproducible, not just reported.
+cbta = validate_flow("WS_CBTA", dry_run=True)
+check("cbta.rows_in", cbta["rows_in"], 96)
+check("cbta.superseded", cbta["superseded"], 0)
+check("cbta.rows_valid", cbta["rows_valid"], 96)
+
+# COMMAND ----------
+
 # DBTITLE 1,Seeded-error fixture
 seeded = validate_flow("WS_CBPOL", dry_run=True,
                        source_table="workspace.sdmx_bronze.cbpol_raw_seeded_test")
@@ -67,6 +77,8 @@ for r in proof:
 check("seeded.rules_caught", len(set(caught)), 6)
 check("seeded.clean_controls_with_findings", len(controls_dirty), 0)
 results["seeded.caught_rules"] = sorted(set(caught))
+# Six of the seven rules. STRUCT is not seeded: it checks that every DSD component has a
+# column, which cannot be provoked by a bad row - only by a malformed table.
 print("\n  caught:", sorted(set(caught)))
 if controls_dirty:
     print("  controls with unexpected findings:", controls_dirty)
@@ -76,6 +88,7 @@ if controls_dirty:
 # DBTITLE 1,Compare against the existing silver tables
 check("cbpol.compare_to_table", list(compare_to_table(cbpol, "workspace.sdmx_silver.cbpol")), [0, 0])
 check("tc.compare_to_table", list(compare_to_table(tc, "workspace.sdmx_silver.tc")), [0, 0])
+check("cbta.compare_to_table", list(compare_to_table(cbta, "workspace.sdmx_silver.cbta")), [0, 0])
 
 # COMMAND ----------
 
