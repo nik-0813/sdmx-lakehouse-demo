@@ -1,13 +1,8 @@
 # Documentation
 
-This directory contains supplementary documentation for the SDMX Lakehouse project.
-
-## Contents
-
-| File | Description |
+| File | What it covers |
 | --- | --- |
-| `architecture.md` | Data architecture diagram and medallion layer descriptions |
-| `screenshots/` | Notebook output screenshots for the portfolio |
-| `sdmx-glossary.md` | SDMX terminology reference (DSD, codelist, dataflow, etc.) |
+| [SDMX.md](SDMX.md) | What the project demonstrates about SDMX — the information model, codelist identity, attachment levels, series keys, revisions — and where each appears in the code |
+| [ENGINEERING.md](ENGINEERING.md) | Design decisions and their trade-offs, the three-layer testing strategy, known issues, deliberate omissions |
 
-> Files will be added as the project progresses.
+Start with [the main README](../README.md).
